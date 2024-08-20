@@ -2,6 +2,7 @@ INSERT INTO
     attributed_checkouts
 SELECT
     checkout_id,
+    user_id,
     user_name,
     click_id,
     product_id,
@@ -17,6 +18,7 @@ FROM
     (
         SELECT
             co.checkout_id,
+            co.user_id,
             u.username AS user_name,
             cl.click_id,
             co.product_id,

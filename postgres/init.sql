@@ -28,6 +28,7 @@ ALTER TABLE
 
 CREATE TABLE attributed_checkouts (
     checkout_id VARCHAR PRIMARY KEY,
+    user_id INTEGER,
     user_name VARCHAR,
     click_id VARCHAR,
     product_id VARCHAR,

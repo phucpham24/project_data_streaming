@@ -182,7 +182,7 @@ def gen_clickstream_data(num_click_records: int) -> None:
         host="postgres",
     )
 
-    user_ids = list(range(1, 101))  # Assuming we have 100 users
+    user_ids = list(range(0, 100))  # Assuming we have 100 users
     product_ids = [str(uuid4()) for _ in range(1000)]  # Assuming 1000 products
 
     for _ in range(num_click_records):

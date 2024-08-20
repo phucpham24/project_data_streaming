@@ -1,5 +1,6 @@
 CREATE TABLE attributed_checkouts (
     checkout_id STRING,
+    user_id INTEGER,
     user_name STRING,
     click_id STRING,
     product_id STRING,
