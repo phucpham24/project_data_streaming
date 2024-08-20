@@ -43,7 +43,7 @@ CREATE TABLE attributed_checkouts (
 
 CREATE TABLE commerce.clicks (
     click_id VARCHAR PRIMARY KEY,
-    user_id INTEGER REFERENCES commerce.users(id),
+    user_id INTEGER,
     product_id VARCHAR,
     product VARCHAR(255),
     price DECIMAL(10, 2),
@@ -54,7 +54,7 @@ CREATE TABLE commerce.clicks (
 );
 CREATE TABLE commerce.checkouts (
     checkout_id VARCHAR PRIMARY KEY,
-    user_id INTEGER REFERENCES commerce.users(id),
+    user_id INTEGER,
     product_id VARCHAR,
     payment_method VARCHAR(255),
     total_amount DECIMAL(10, 2),

@@ -30,7 +30,7 @@ def gen_user_data(num_user_records: int) -> None:
         curr.execute(
             """INSERT INTO commerce.products
              (id, name, description, price) VALUES (%s, %s, %s, %s)""",
-            (id, fake.name(), fake.text(), fake.random_int(min=1, max=100)),
+            (id, fake.name(), fake.text(), fake.random_int(min=1, max=1000)),
         )
         conn.commit()
 
@@ -199,7 +199,7 @@ def gen_clickstream_data(num_click_records: int) -> None:
             save_click_to_db(conn, click_event)
 
             time.sleep(
-                random.uniform(0.1, 2.0)
+                random.uniform(0.01, 0.1)
             )  # Delays between 0.1 and 2 seconds
 
             # Randomly decide to browse another product
@@ -214,7 +214,7 @@ def gen_clickstream_data(num_click_records: int) -> None:
 
             # Simulate a realistic delay between last click and checkout
             time.sleep(
-                random.uniform(1.0, 5.0)
+                random.uniform(0.1, 1)
             )  # Delays between 1 and 5 seconds
 
     conn.close()
