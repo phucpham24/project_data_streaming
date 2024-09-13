@@ -1,0 +1,153 @@
+# HELP flink_jobmanager_job_createdTime createdTime (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_createdTime gauge
+flink_jobmanager_job_createdTime{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_numRegisteredTaskManagers numRegisteredTaskManagers (scope: jobmanager)
+# TYPE flink_jobmanager_numRegisteredTaskManagers gauge
+flink_jobmanager_numRegisteredTaskManagers{host="jobmanager",} 1.0
+# HELP flink_jobmanager_Status_JVM_Memory_Metaspace_Used Used (scope: jobmanager_Status_JVM_Memory_Metaspace)
+# TYPE flink_jobmanager_Status_JVM_Memory_Metaspace_Used gauge
+flink_jobmanager_Status_JVM_Memory_Metaspace_Used{host="jobmanager",} 6.3282512E7
+# HELP flink_jobmanager_job_numberOfCompletedCheckpoints numberOfCompletedCheckpoints (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_numberOfCompletedCheckpoints gauge
+flink_jobmanager_job_numberOfCompletedCheckpoints{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 23.0
+# HELP flink_jobmanager_Status_JVM_GarbageCollector_G1_Young_Generation_Time Time (scope: jobmanager_Status_JVM_GarbageCollector_G1_Young_Generation)
+# TYPE flink_jobmanager_Status_JVM_GarbageCollector_G1_Young_Generation_Time gauge
+flink_jobmanager_Status_JVM_GarbageCollector_G1_Young_Generation_Time{host="jobmanager",} 327.0
+# HELP flink_jobmanager_Status_JVM_Memory_Mapped_TotalCapacity TotalCapacity (scope: jobmanager_Status_JVM_Memory_Mapped)
+# TYPE flink_jobmanager_Status_JVM_Memory_Mapped_TotalCapacity gauge
+flink_jobmanager_Status_JVM_Memory_Mapped_TotalCapacity{host="jobmanager",} 0.0
+# HELP flink_jobmanager_job_runningTime runningTime (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_runningTime gauge
+flink_jobmanager_job_runningTime{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 238770.0
+# HELP flink_jobmanager_Status_JVM_Memory_Heap_Used Used (scope: jobmanager_Status_JVM_Memory_Heap)
+# TYPE flink_jobmanager_Status_JVM_Memory_Heap_Used gauge
+flink_jobmanager_Status_JVM_Memory_Heap_Used{host="jobmanager",} 2.51318368E8
+# HELP flink_jobmanager_Status_JVM_Memory_Heap_Max Max (scope: jobmanager_Status_JVM_Memory_Heap)
+# TYPE flink_jobmanager_Status_JVM_Memory_Heap_Max gauge
+flink_jobmanager_Status_JVM_Memory_Heap_Max{host="jobmanager",} 1.073741824E9
+# HELP flink_jobmanager_job_lastCheckpointRestoreTimestamp lastCheckpointRestoreTimestamp (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_lastCheckpointRestoreTimestamp gauge
+flink_jobmanager_job_lastCheckpointRestoreTimestamp{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} -1.0
+# HELP flink_jobmanager_job_uptime uptime (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_uptime gauge
+flink_jobmanager_job_uptime{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 238771.0
+# HELP flink_jobmanager_job_lastCheckpointExternalPath lastCheckpointExternalPath (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_lastCheckpointExternalPath gauge
+flink_jobmanager_job_lastCheckpointExternalPath{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_Status_JVM_Memory_Mapped_MemoryUsed MemoryUsed (scope: jobmanager_Status_JVM_Memory_Mapped)
+# TYPE flink_jobmanager_Status_JVM_Memory_Mapped_MemoryUsed gauge
+flink_jobmanager_Status_JVM_Memory_Mapped_MemoryUsed{host="jobmanager",} 0.0
+# HELP flink_jobmanager_job_downtime downtime (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_downtime gauge
+flink_jobmanager_job_downtime{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_Status_JVM_Memory_Direct_MemoryUsed MemoryUsed (scope: jobmanager_Status_JVM_Memory_Direct)
+# TYPE flink_jobmanager_Status_JVM_Memory_Direct_MemoryUsed gauge
+flink_jobmanager_Status_JVM_Memory_Direct_MemoryUsed{host="jobmanager",} 3.0283637E7
+# HELP flink_jobmanager_numRunningJobs numRunningJobs (scope: jobmanager)
+# TYPE flink_jobmanager_numRunningJobs gauge
+flink_jobmanager_numRunningJobs{host="jobmanager",} 1.0
+# HELP flink_jobmanager_Status_JVM_CPU_Time Time (scope: jobmanager_Status_JVM_CPU)
+# TYPE flink_jobmanager_Status_JVM_CPU_Time gauge
+flink_jobmanager_Status_JVM_CPU_Time{host="jobmanager",} 5.205E10
+# HELP flink_jobmanager_job_numberOfFailedCheckpoints numberOfFailedCheckpoints (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_numberOfFailedCheckpoints gauge
+flink_jobmanager_job_numberOfFailedCheckpoints{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_job_fullRestarts fullRestarts (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_fullRestarts gauge
+flink_jobmanager_job_fullRestarts{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_job_lastCheckpointPersistedData lastCheckpointPersistedData (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_lastCheckpointPersistedData gauge
+flink_jobmanager_job_lastCheckpointPersistedData{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_job_lastCompletedCheckpointId lastCompletedCheckpointId (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_lastCompletedCheckpointId gauge
+flink_jobmanager_job_lastCompletedCheckpointId{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 23.0
+# HELP flink_jobmanager_Status_JVM_GarbageCollector_G1_Young_Generation_Count Count (scope: jobmanager_Status_JVM_GarbageCollector_G1_Young_Generation)
+# TYPE flink_jobmanager_Status_JVM_GarbageCollector_G1_Young_Generation_Count gauge
+flink_jobmanager_Status_JVM_GarbageCollector_G1_Young_Generation_Count{host="jobmanager",} 6.0
+# HELP flink_jobmanager_job_numRestarts numRestarts (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_numRestarts gauge
+flink_jobmanager_job_numRestarts{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_job_numberOfInProgressCheckpoints numberOfInProgressCheckpoints (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_numberOfInProgressCheckpoints gauge
+flink_jobmanager_job_numberOfInProgressCheckpoints{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_job_totalNumberOfCheckpoints totalNumberOfCheckpoints (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_totalNumberOfCheckpoints gauge
+flink_jobmanager_job_totalNumberOfCheckpoints{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 23.0
+# HELP flink_jobmanager_Status_JVM_Memory_Direct_Count Count (scope: jobmanager_Status_JVM_Memory_Direct)
+# TYPE flink_jobmanager_Status_JVM_Memory_Direct_Count gauge
+flink_jobmanager_Status_JVM_Memory_Direct_Count{host="jobmanager",} 33.0
+# HELP flink_jobmanager_job_lastCheckpointFullSize lastCheckpointFullSize (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_lastCheckpointFullSize gauge
+flink_jobmanager_job_lastCheckpointFullSize{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 1230820.0
+# HELP flink_jobmanager_job_lastCheckpointDuration lastCheckpointDuration (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_lastCheckpointDuration gauge
+flink_jobmanager_job_lastCheckpointDuration{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 57.0
+# HELP flink_jobmanager_job_lastCheckpointProcessedData lastCheckpointProcessedData (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_lastCheckpointProcessedData gauge
+flink_jobmanager_job_lastCheckpointProcessedData{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 330.0
+# HELP flink_jobmanager_job_cancellingTime cancellingTime (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_cancellingTime gauge
+flink_jobmanager_job_cancellingTime{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_Status_JVM_CPU_Load Load (scope: jobmanager_Status_JVM_CPU)
+# TYPE flink_jobmanager_Status_JVM_CPU_Load gauge
+flink_jobmanager_Status_JVM_CPU_Load{host="jobmanager",} 0.00980392156862745
+# HELP flink_jobmanager_Status_JVM_Memory_NonHeap_Max Max (scope: jobmanager_Status_JVM_Memory_NonHeap)
+# TYPE flink_jobmanager_Status_JVM_Memory_NonHeap_Max gauge
+flink_jobmanager_Status_JVM_Memory_NonHeap_Max{host="jobmanager",} 7.80140544E8
+# HELP flink_jobmanager_job_failingTime failingTime (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_failingTime gauge
+flink_jobmanager_job_failingTime{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_Status_JVM_Memory_Metaspace_Max Max (scope: jobmanager_Status_JVM_Memory_Metaspace)
+# TYPE flink_jobmanager_Status_JVM_Memory_Metaspace_Max gauge
+flink_jobmanager_Status_JVM_Memory_Metaspace_Max{host="jobmanager",} 2.68435456E8
+# HELP flink_jobmanager_Status_JVM_GarbageCollector_G1_Old_Generation_Time Time (scope: jobmanager_Status_JVM_GarbageCollector_G1_Old_Generation)
+# TYPE flink_jobmanager_Status_JVM_GarbageCollector_G1_Old_Generation_Time gauge
+flink_jobmanager_Status_JVM_GarbageCollector_G1_Old_Generation_Time{host="jobmanager",} 0.0
+# HELP flink_jobmanager_Status_JVM_ClassLoader_ClassesUnloaded ClassesUnloaded (scope: jobmanager_Status_JVM_ClassLoader)
+# TYPE flink_jobmanager_Status_JVM_ClassLoader_ClassesUnloaded gauge
+flink_jobmanager_Status_JVM_ClassLoader_ClassesUnloaded{host="jobmanager",} 0.0
+# HELP flink_jobmanager_job_lastCheckpointSize lastCheckpointSize (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_lastCheckpointSize gauge
+flink_jobmanager_job_lastCheckpointSize{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 1230820.0
+# HELP flink_jobmanager_job_restartingTime restartingTime (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_restartingTime gauge
+flink_jobmanager_job_restartingTime{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_Status_JVM_Memory_NonHeap_Used Used (scope: jobmanager_Status_JVM_Memory_NonHeap)
+# TYPE flink_jobmanager_Status_JVM_Memory_NonHeap_Used gauge
+flink_jobmanager_Status_JVM_Memory_NonHeap_Used{host="jobmanager",} 9.1091248E7
+# HELP flink_jobmanager_Status_JVM_GarbageCollector_G1_Old_Generation_Count Count (scope: jobmanager_Status_JVM_GarbageCollector_G1_Old_Generation)
+# TYPE flink_jobmanager_Status_JVM_GarbageCollector_G1_Old_Generation_Count gauge
+flink_jobmanager_Status_JVM_GarbageCollector_G1_Old_Generation_Count{host="jobmanager",} 0.0
+# HELP flink_jobmanager_taskSlotsAvailable taskSlotsAvailable (scope: jobmanager)
+# TYPE flink_jobmanager_taskSlotsAvailable gauge
+flink_jobmanager_taskSlotsAvailable{host="jobmanager",} 0.0
+# HELP flink_jobmanager_Status_JVM_Memory_Direct_TotalCapacity TotalCapacity (scope: jobmanager_Status_JVM_Memory_Direct)
+# TYPE flink_jobmanager_Status_JVM_Memory_Direct_TotalCapacity gauge
+flink_jobmanager_Status_JVM_Memory_Direct_TotalCapacity{host="jobmanager",} 3.0283636E7
+# HELP flink_jobmanager_taskSlotsTotal taskSlotsTotal (scope: jobmanager)
+# TYPE flink_jobmanager_taskSlotsTotal gauge
+flink_jobmanager_taskSlotsTotal{host="jobmanager",} 2.0
+# HELP flink_jobmanager_job_deployingTime deployingTime (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_deployingTime gauge
+flink_jobmanager_job_deployingTime{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_Status_JVM_Threads_Count Count (scope: jobmanager_Status_JVM_Threads)
+# TYPE flink_jobmanager_Status_JVM_Threads_Count gauge
+flink_jobmanager_Status_JVM_Threads_Count{host="jobmanager",} 91.0
+# HELP flink_jobmanager_Status_JVM_ClassLoader_ClassesLoaded ClassesLoaded (scope: jobmanager_Status_JVM_ClassLoader)
+# TYPE flink_jobmanager_Status_JVM_ClassLoader_ClassesLoaded gauge
+flink_jobmanager_Status_JVM_ClassLoader_ClassesLoaded{host="jobmanager",} 11147.0
+# HELP flink_jobmanager_Status_JVM_Memory_Heap_Committed Committed (scope: jobmanager_Status_JVM_Memory_Heap)
+# TYPE flink_jobmanager_Status_JVM_Memory_Heap_Committed gauge
+flink_jobmanager_Status_JVM_Memory_Heap_Committed{host="jobmanager",} 1.073741824E9
+# HELP flink_jobmanager_Status_JVM_Memory_Metaspace_Committed Committed (scope: jobmanager_Status_JVM_Memory_Metaspace)
+# TYPE flink_jobmanager_Status_JVM_Memory_Metaspace_Committed gauge
+flink_jobmanager_Status_JVM_Memory_Metaspace_Committed{host="jobmanager",} 6.6445312E7
+# HELP flink_jobmanager_Status_JVM_Memory_NonHeap_Committed Committed (scope: jobmanager_Status_JVM_Memory_NonHeap)
+# TYPE flink_jobmanager_Status_JVM_Memory_NonHeap_Committed gauge
+flink_jobmanager_Status_JVM_Memory_NonHeap_Committed{host="jobmanager",} 9.6669696E7
+# HELP flink_jobmanager_job_initializingTime initializingTime (scope: jobmanager_job)
+# TYPE flink_jobmanager_job_initializingTime gauge
+flink_jobmanager_job_initializingTime{job_id="236abdf0cd81b6fe2780907d08b2976c",host="jobmanager",job_name="checkout_attribution_job",} 0.0
+# HELP flink_jobmanager_Status_JVM_Memory_Mapped_Count Count (scope: jobmanager_Status_JVM_Memory_Mapped)
+# TYPE flink_jobmanager_Status_JVM_Memory_Mapped_Count gauge
+flink_jobmanager_Status_JVM_Memory_Mapped_Count{host="jobmanager",} 0.0

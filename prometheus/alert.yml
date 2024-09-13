@@ -1,0 +1,11 @@
+groups:
+  - name: FlinkAlerts
+    rules:
+      - alert: HighTaskLatency
+        expr: flink_taskmanager_job_latency_sourceToSink > 1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High Task Latency in Flink job"
+          description: "The task latency from source to sink has exceeded 1 second for more than 5 minutes."
