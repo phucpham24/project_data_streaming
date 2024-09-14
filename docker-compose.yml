@@ -11,6 +11,7 @@ services:
     command: jobmanager
     volumes:
       - ./code:/opt/flink/code
+      - ./flink-checkpoints:/opt/flink/checkpoints  # Add this line for checkpoint storage
     environment:
       - |
         FLINK_PROPERTIES=
@@ -27,12 +28,13 @@ services:
       - "9250:9249"
     volumes:
       - ./code:/opt/flink/code
+      - ./flink-checkpoints:/opt/flink/checkpoints  # Add this line for checkpoint storage
     scale: 1
     environment:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-        taskmanager.numberOfTaskSlots: 2        
+        taskmanager.numberOfTaskSlots: 10
 
   prometheus:
     image: prom/prometheus:v2.37.1
