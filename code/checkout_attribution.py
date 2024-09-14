@@ -27,7 +27,7 @@ class StreamJobConfig:
 class KafkaConfig:
     connector: str = 'kafka'
     bootstrap_servers: str = 'kafka:9092'
-    scan_stratup_mode: str = 'earliest-offset'
+    scan_startup_mode: str = 'earliest-offset'
     consumer_group_id: str = 'flink-consumer-group-1'
 
 
