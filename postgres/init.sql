@@ -65,3 +65,16 @@ CREATE TABLE commerce.checkouts (
     ip_address VARCHAR(45),
     datetime_occured TIMESTAMP(3) NOT NULL
 );
+
+CREATE TABLE commerce.checkouts_sink (
+    checkout_id VARCHAR PRIMARY KEY,
+    user_id INTEGER,
+    product_id VARCHAR,
+    payment_method VARCHAR,
+    total_amount DECIMAL(5, 2),
+    shipping_address VARCHAR,
+    billing_address VARCHAR,
+    user_agent VARCHAR,
+    ip_address VARCHAR,
+    datetime_occured TIMESTAMP
+);

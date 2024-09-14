@@ -62,6 +62,11 @@ class ApplicationAttributedCheckoutsTableConfig(ApplicationDatabaseConfig):
     table_name: str = 'commerce.attributed_checkouts'
 
 
+@dataclass(frozen=True)
+class ApplicationCheckoutsSinkTableConfig(ApplicationDatabaseConfig):
+    table_name: str = 'commerce.checkouts_sink'
+
+
 def get_execution_environment(
     config: StreamJobConfig,
 ) -> Tuple[StreamExecutionEnvironment, StreamTableEnvironment]:
@@ -97,6 +102,8 @@ def get_sql_query(
         'users': ApplicationUsersTableConfig(),
         'attributed_checkouts': ApplicationUsersTableConfig(),
         'attribute_checkouts': ApplicationAttributedCheckoutsTableConfig(),
+        'checkouts_sink': ApplicationCheckoutsSinkTableConfig(),
+        'checkout_sink': ApplicationCheckoutsSinkTableConfig(),
     }
 
     return template_env.get_template(f"{type}/{entity}.sql").render(
@@ -116,9 +123,14 @@ def run_checkout_attribution_job(
     # Create Sink DDL
     t_env.execute_sql(get_sql_query('attributed_checkouts', 'sink'))
 
+    t_env.execute_sql(get_sql_query('checkouts_sink', 'sink'))
+
     # Run processing query
     stmt_set = t_env.create_statement_set()
     stmt_set.add_insert_sql(get_sql_query('attribute_checkouts', 'process'))
+
+    # Add insert statements for clicks and checkouts
+    stmt_set.add_insert_sql(get_sql_query('checkout_sink', 'process'))
 
     checkout_attribution_job = stmt_set.execute()
     print(
