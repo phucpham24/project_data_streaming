@@ -1,6 +1,7 @@
 import argparse
 import json
 import random
+import threading
 import time
 from datetime import datetime
 from uuid import uuid4
@@ -12,15 +13,15 @@ from faker import Faker
 fake = Faker()
 
 
-# Generate user data
+# Generate user and product data
 def gen_user_data(num_user_records: int) -> None:
+    conn = psycopg2.connect(
+        dbname="postgres",
+        user="postgres",
+        password="postgres",
+        host="postgres",
+    )
     for id in range(num_user_records):
-        conn = psycopg2.connect(
-            dbname="postgres",
-            user="postgres",
-            password="postgres",
-            host="postgres",
-        )
         curr = conn.cursor()
         curr.execute(
             """INSERT INTO commerce.users
@@ -34,7 +35,7 @@ def gen_user_data(num_user_records: int) -> None:
         )
         conn.commit()
 
-        # update 10 % of the time
+        # Update 10% of the time
         if random.randint(1, 100) >= 90:
             curr.execute(
                 "UPDATE commerce.users SET username = %s WHERE id = %s",
@@ -46,10 +47,7 @@ def gen_user_data(num_user_records: int) -> None:
             )
         conn.commit()
         curr.close()
-    return
-
-
-# Stream clicks and checkouts data
+    conn.close()
 
 
 # Generate a random user agent string
@@ -62,7 +60,7 @@ def random_ip():
     return fake.ipv4()
 
 
-# Generate a click event with the current datetime_occured
+# Generate a click event
 def generate_click_event(user_id, product_id=None):
     click_id = str(uuid4())
     product_id = product_id or str(uuid4())
@@ -90,7 +88,7 @@ def generate_click_event(user_id, product_id=None):
     return click_event
 
 
-# Generate a checkout event with the current datetime_occured
+# Generate a checkout event
 def generate_checkout_event(user_id, product_id):
     payment_method = fake.credit_card_provider()
     total_amount = fake.pyfloat(left_digits=3, right_digits=2, positive=True)
@@ -118,14 +116,14 @@ def generate_checkout_event(user_id, product_id):
     return checkout_event
 
 
-# Function to push the events to a Kafka topic
+# Push events to Kafka
 def push_to_kafka(event, topic):
     producer = Producer({'bootstrap.servers': 'kafka:9092'})
     producer.produce(topic, json.dumps(event).encode('utf-8'))
     producer.flush()
 
 
-# Function to save click events to PostgreSQL
+# Save click events to PostgreSQL
 def save_click_to_db(conn, click_event):
     curr = conn.cursor()
     curr.execute(
@@ -148,7 +146,7 @@ def save_click_to_db(conn, click_event):
     conn.commit()
 
 
-# Function to save checkout events to PostgreSQL
+# Save checkout events to PostgreSQL
 def save_checkout_to_db(conn, checkout_event):
     curr = conn.cursor()
     curr.execute(
@@ -174,7 +172,34 @@ def save_checkout_to_db(conn, checkout_event):
     conn.commit()
 
 
-def gen_clickstream_data(num_click_records: int) -> None:
+# Generate click events for a user
+def generate_click_events_for_user(
+    conn, user_id, product_ids, num_clicks_before_checkout
+):
+    for _ in range(num_clicks_before_checkout):
+        product_id = random.choice(product_ids)
+        click_event = generate_click_event(user_id, product_id)
+        push_to_kafka(click_event, 'clicks')
+        save_click_to_db(conn, click_event)
+
+        # Optional delay, reduce to increase throughput
+        time.sleep(random.uniform(0.01, 0.05))
+
+    # Simulate a checkout event after several clicks
+    if random.random() < 0.5:  # 50% chance to checkout
+        product_id = random.choice(product_ids)
+        checkout_event = generate_checkout_event(user_id, product_id)
+        push_to_kafka(checkout_event, 'checkouts')
+        save_checkout_to_db(conn, checkout_event)
+
+        # Optional delay, reduce to increase throughput
+        time.sleep(random.uniform(0.01, 0.1))
+
+
+# Main function to generate clickstream data using threading
+def gen_clickstream_data(
+    num_click_records: int, num_threads: int = 10
+) -> None:
     conn = psycopg2.connect(
         dbname="postgres",
         user="postgres",
@@ -185,37 +210,23 @@ def gen_clickstream_data(num_click_records: int) -> None:
     user_ids = list(range(0, 100))  # Assuming we have 100 users
     product_ids = [str(uuid4()) for _ in range(1000)]  # Assuming 1000 products
 
-    for _ in range(num_click_records):
-        user_id = random.choice(user_ids)
-        product_id = random.choice(product_ids)
+    def worker():
+        for _ in range(num_click_records // num_threads):
+            user_id = random.choice(user_ids)
+            num_clicks_before_checkout = random.randint(1, 10)
+            generate_click_events_for_user(
+                conn, user_id, product_ids, num_clicks_before_checkout
+            )
 
-        # Simulate a user browsing multiple products
-        num_clicks_before_checkout = random.randint(
-            1, 10
-        )  # Vary the number of clicks
-        for _ in range(num_clicks_before_checkout):
-            click_event = generate_click_event(user_id, product_id)
-            push_to_kafka(click_event, 'clicks')
-            save_click_to_db(conn, click_event)
+    threads = []
+    for _ in range(num_threads):
+        t = threading.Thread(target=worker)
+        threads.append(t)
+        t.start()
 
-            time.sleep(
-                random.uniform(0.01, 0.1)
-            )  # Delays between 0.1 and 2 seconds
-
-            # Randomly decide to browse another product
-            if random.random() < 0.3:  # 30% chance to switch products
-                product_id = random.choice(product_ids)
-
-        # Simulate a checkout event after several clicks
-        if random.random() < 0.5:  # 50% chance to checkout
-            checkout_event = generate_checkout_event(user_id, product_id)
-            push_to_kafka(checkout_event, 'checkouts')
-            save_checkout_to_db(conn, checkout_event)
-
-            # Simulate a realistic delay between last click and checkout
-            time.sleep(
-                random.uniform(0.1, 1)
-            )  # Delays between 1 and 5 seconds
+    # Wait for all threads to finish
+    for t in threads:
+        t.join()
 
     conn.close()
 
@@ -234,8 +245,15 @@ if __name__ == "__main__":
         "--num_click_records",
         type=int,
         help="Number of click records to generate",
-        default=100000000,
+        default=100000,
+    )
+    parser.add_argument(
+        "-nt",
+        "--num_threads",
+        type=int,
+        help="Number of threads to use for data generation",
+        default=10,
     )
     args = parser.parse_args()
     gen_user_data(args.num_user_records)
-    gen_clickstream_data(args.num_click_records)
+    gen_clickstream_data(args.num_click_records, args.num_threads)

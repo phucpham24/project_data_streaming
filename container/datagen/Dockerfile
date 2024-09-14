@@ -1,4 +1,4 @@
-FROM python:3.7-slim
+FROM python:3.8-slim
 
 RUN pip install \
     psycopg2-binary==2.9.3 \
@@ -9,6 +9,8 @@ RUN pip install \
 WORKDIR /opt/datagen
 
 COPY requirements.txt /opt/datagen/
+
+RUN pip install --upgrade pip
 
 RUN pip install --no-cache-dir -r /opt/datagen/requirements.txt
 

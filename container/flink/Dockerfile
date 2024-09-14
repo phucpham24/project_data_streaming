@@ -14,6 +14,9 @@ RUN wget https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connect
     wget https://repo.maven.apache.org/maven2/org/apache/flink/flink-connector-jdbc/3.0.0-1.16/flink-connector-jdbc-3.0.0-1.16.jar && \
     wget https://jdbc.postgresql.org/download/postgresql-42.6.0.jar
 
+# Create directories for checkpoints and savepoints
+RUN mkdir -p /opt/flink/checkpoints /opt/flink/savepoints
+
 # Configure Flink to export Prometheus metrics
 RUN echo "metrics.reporters: prom" >> "$FLINK_HOME/conf/flink-conf.yaml"; \
     echo "metrics.reporter.prom.factory.class: org.apache.flink.metrics.prometheus.PrometheusReporterFactory" >> "$FLINK_HOME/conf/flink-conf.yaml"; \
