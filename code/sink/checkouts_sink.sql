@@ -3,7 +3,7 @@ CREATE TABLE checkouts_sink (
     user_id INTEGER,
     product_id STRING,
     payment_method STRING,
-    total_amount DECIMAL(5, 2),
+    total_amount FLOAT,
     shipping_address STRING,
     billing_address STRING,
     user_agent STRING,

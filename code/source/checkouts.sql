@@ -3,7 +3,7 @@ CREATE TABLE checkouts (
     user_id INT,
     product_id STRING,
     payment_method STRING,
-    total_amount DECIMAL(5, 2),
+    total_amount FLOAT,
     shipping_address STRING,
     billing_address STRING,
     user_agent STRING,

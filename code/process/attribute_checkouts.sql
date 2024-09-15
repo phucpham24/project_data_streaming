@@ -42,7 +42,7 @@ FROM
             LEFT JOIN clicks AS cl ON co.user_id = cl.user_id
             AND co.product_id = cl.product_id
             AND co.datetime_occured BETWEEN cl.datetime_occured
-            AND cl.datetime_occured + INTERVAL '1' HOUR
+            AND cl.datetime_occured + INTERVAL '5' MINUTE
     )
 WHERE
     rn = 1;
