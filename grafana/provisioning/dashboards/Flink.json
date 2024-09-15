@@ -734,10 +734,6 @@
       }
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -804,10 +800,16 @@
       "repeatDirection": "h",
       "targets": [
         {
-          "expr": "flink_jobmanager_job_uptime{job_name=\"$job\"}",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "refId": "A"
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "flink_jobmanager_job_uptime{}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "B"
         }
       ],
       "title": "Uptime",
