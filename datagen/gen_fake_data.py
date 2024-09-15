@@ -8,6 +8,7 @@ from uuid import uuid4
 
 import psycopg2
 from confluent_kafka import Producer
+from confluent_kafka.admin import AdminClient, NewTopic
 from faker import Faker
 from faker.providers import BaseProvider
 
@@ -215,7 +216,25 @@ fake = Faker()
 fake.add_provider(ProductProvider)
 
 
-# Function to generate user and product data
+# Create Kafka topics with 5 partitions
+def create_topic(topic_name, num_partitions, replication_factor):
+    conf = {'bootstrap.servers': 'kafka:9092'}
+    admin_client = AdminClient(conf)
+    new_topic = NewTopic(
+        topic=topic_name,
+        num_partitions=num_partitions,
+        replication_factor=replication_factor,
+    )
+    fs = admin_client.create_topics([new_topic])
+    for topic, f in fs.items():
+        try:
+            f.result()
+            print(f"Topic '{topic}' created with {num_partitions} partitions.")
+        except Exception as e:
+            print(f"Failed to create topic '{topic}': {e}")
+
+
+# Generate user and product data
 def gen_user_and_product_data(
     num_user_records: int, num_product_records: int
 ) -> None:
@@ -223,19 +242,15 @@ def gen_user_and_product_data(
         dbname="postgres",
         user="postgres",
         password="postgres",
-        host="postgres",  # Assuming the host is local, change if needed
+        host="postgres",
     )
     curr = conn.cursor()
-
-    # Insert users
     for id in range(num_user_records):
         curr.execute(
             """INSERT INTO commerce.users (id, username, password)
             VALUES (%s, %s, %s)""",
             (id, fake.user_name(), fake.password()),
         )
-
-    # Insert products
     for id in range(num_product_records):
         curr.execute(
             """INSERT INTO commerce.products (id, name, description, price)
@@ -247,7 +262,6 @@ def gen_user_and_product_data(
                 fake.random_int(min=1, max=1000),
             ),
         )
-
     conn.commit()
     curr.close()
     conn.close()
@@ -263,7 +277,7 @@ def random_ip():
     return fake.ipv4()
 
 
-# Generate a click event using actual products
+# Generate a click event
 def generate_click_event(user_id, product):
     click_id = str(uuid4())
     product_id, product_name, price = product
@@ -271,7 +285,6 @@ def generate_click_event(user_id, product):
     user_agent = random_user_agent()
     ip_address = random_ip()
     datetime_occured = datetime.now()
-
     click_event = {
         "click_id": click_id,
         "user_id": user_id,
@@ -285,23 +298,19 @@ def generate_click_event(user_id, product):
             :-3
         ],
     }
-
     return click_event
 
 
-# Generate a checkout event using actual products
+# Generate a checkout event
 def generate_checkout_event(user_id, product):
     product_id, product_name, price = product
     payment_method = fake.credit_card_provider()
-    total_amount = price * random.uniform(
-        1, 3
-    )  # Simulate total based on price
+    total_amount = price * random.uniform(1, 3)
     shipping_address = fake.address()
     billing_address = fake.address()
     user_agent = random_user_agent()
     ip_address = random_ip()
     datetime_occured = datetime.now()
-
     checkout_event = {
         "checkout_id": str(uuid4()),
         "user_id": user_id,
@@ -316,7 +325,6 @@ def generate_checkout_event(user_id, product):
             :-3
         ],
     }
-
     return checkout_event
 
 
@@ -385,22 +393,16 @@ def generate_click_events_for_user(
         click_event = generate_click_event(user_id, product)
         push_to_kafka(click_event, 'clicks')
         save_click_to_db(conn, click_event)
-
-        # Optional delay, reduce to increase throughput
         time.sleep(random.uniform(0.01, 0.05))
-
-    # Simulate a checkout event after several clicks
-    if random.random() < 0.5:  # 50% chance to checkout
+    if random.random() < 0.5:
         product = random.choice(products)
         checkout_event = generate_checkout_event(user_id, product)
         push_to_kafka(checkout_event, 'checkouts')
         save_checkout_to_db(conn, checkout_event)
-
-        # Optional delay, reduce to increase throughput
         time.sleep(random.uniform(0.01, 0.1))
 
 
-# Main function to generate clickstream data using threading
+# Generate clickstream data using threading
 def gen_clickstream_data(
     num_click_records: int, num_threads: int = 100
 ) -> None:
@@ -410,15 +412,10 @@ def gen_clickstream_data(
         password="postgres",
         host="postgres",
     )
-
-    user_ids = list(range(0, 100))  # Assuming we have 100 users
-
-    # Fetch actual product data from the database
+    user_ids = list(range(0, 100))
     curr = conn.cursor()
     curr.execute("SELECT id, name, price FROM commerce.products")
-    products = (
-        curr.fetchall()
-    )  # List of tuples (product_id, product_name, price)
+    products = curr.fetchall()
     curr.close()
 
     def worker():
@@ -434,8 +431,6 @@ def gen_clickstream_data(
         t = threading.Thread(target=worker)
         threads.append(t)
         t.start()
-
-    # Wait for all threads to finish
     for t in threads:
         t.join()
 
@@ -443,6 +438,8 @@ def gen_clickstream_data(
 
 
 if __name__ == "__main__":
+    numpartition = 5
+    replication_factor = 1
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-nu",
@@ -473,6 +470,10 @@ if __name__ == "__main__":
         default=100,
     )
     args = parser.parse_args()
+
+    # Create Kafka topics with 5 partitions
+    create_topic('clicks', numpartition, replication_factor)
+    create_topic('checkouts', numpartition, replication_factor)
 
     # Generate users and products
     gen_user_and_product_data(args.num_user_records, args.num_product_records)
