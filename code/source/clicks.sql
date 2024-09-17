@@ -1,7 +1,7 @@
 CREATE TABLE clicks (
     click_id STRING,
     user_id INT,
-    product_id STRING,
+    product_id INTEGER,
     product STRING,
     price DOUBLE,
     url STRING,

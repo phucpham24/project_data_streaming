@@ -1,7 +1,7 @@
 CREATE TABLE checkouts (
     checkout_id STRING,
     user_id INT,
-    product_id STRING,
+    product_id INTEGER,
     payment_method STRING,
     total_amount FLOAT,
     shipping_address STRING,

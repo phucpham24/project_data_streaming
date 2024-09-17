@@ -1,5 +1,6 @@
 import argparse
 import json
+import logging
 import random
 import threading
 import time
@@ -245,13 +246,13 @@ def gen_user_and_product_data(
         host="postgres",
     )
     curr = conn.cursor()
-    for id in range(num_user_records):
+    for id in range(1, num_user_records + 1):
         curr.execute(
             """INSERT INTO commerce.users (id, username, password)
             VALUES (%s, %s, %s)""",
             (id, fake.user_name(), fake.password()),
         )
-    for id in range(num_product_records):
+    for id in range(1, num_product_records + 1):
         curr.execute(
             """INSERT INTO commerce.products (id, name, description, price)
             VALUES (%s, %s, %s, %s)""",
@@ -328,11 +329,22 @@ def generate_checkout_event(user_id, product):
     return checkout_event
 
 
-# Push events to Kafka
-def push_to_kafka(event, topic):
+# Push events to Kafka with a key
+def push_to_kafka(event, topic, key=None):
     producer = Producer({'bootstrap.servers': 'kafka:9092'})
-    producer.produce(topic, json.dumps(event).encode('utf-8'))
-    producer.flush()
+
+    # Ensure the key is in bytes format (as required by Kafka)
+    if key:
+        key = str(key).encode('utf-8')
+
+    try:
+        logging.info(f"Pushing event to Kafka: {event}")
+        producer.produce(
+            topic, key=key, value=json.dumps(event).encode('utf-8')
+        )
+        producer.flush()
+    except Exception as e:
+        logging.error(f"Failed to send event to Kafka: {e}")
 
 
 # Save click events to PostgreSQL
@@ -384,20 +396,30 @@ def save_checkout_to_db(conn, checkout_event):
     conn.commit()
 
 
-# Generate click events for a user
 def generate_click_events_for_user(
     conn, user_id, products, num_clicks_before_checkout
 ):
+    clicked_products = []  # Keep track of clicked products
+
     for _ in range(num_clicks_before_checkout):
         product = random.choice(products)
+        clicked_products.append(product)  # Store the clicked product
         click_event = generate_click_event(user_id, product)
-        push_to_kafka(click_event, 'clicks')
+        # Push click event to Kafka with user_id as the key
+        push_to_kafka(click_event, 'clicks', key=click_event["user_id"])
         save_click_to_db(conn, click_event)
         time.sleep(random.uniform(0.01, 0.05))
-    if random.random() < 0.5:
-        product = random.choice(products)
+
+    # Ensure there's at least one click event before a checkout can happen
+    if clicked_products and random.random() < 0.5:
+        product = random.choice(
+            clicked_products
+        )  # Choose from clicked products
         checkout_event = generate_checkout_event(user_id, product)
-        push_to_kafka(checkout_event, 'checkouts')
+        # Push checkout event to Kafka with user_id as the key
+        push_to_kafka(
+            checkout_event, 'checkouts', key=checkout_event["user_id"]
+        )
         save_checkout_to_db(conn, checkout_event)
         time.sleep(random.uniform(0.01, 0.1))
 
@@ -412,7 +434,7 @@ def gen_clickstream_data(
         password="postgres",
         host="postgres",
     )
-    user_ids = list(range(0, 100))
+    user_ids = list(range(1, 101))
     curr = conn.cursor()
     curr.execute("SELECT id, name, price FROM commerce.products")
     products = curr.fetchall()
@@ -438,7 +460,7 @@ def gen_clickstream_data(
 
 
 if __name__ == "__main__":
-    numpartition = 5
+    numpartition = 10
     replication_factor = 1
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -460,7 +482,7 @@ if __name__ == "__main__":
         "--num_click_records",
         type=int,
         help="Number of click records to generate",
-        default=100000,
+        default=100000000,
     )
     parser.add_argument(
         "-nt",

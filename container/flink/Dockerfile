@@ -20,6 +20,7 @@ RUN mkdir -p /opt/flink/checkpoints /opt/flink/savepoints
 # Configure Flink to export Prometheus metrics
 RUN echo "metrics.reporters: prom" >> "$FLINK_HOME/conf/flink-conf.yaml"; \
     echo "metrics.reporter.prom.factory.class: org.apache.flink.metrics.prometheus.PrometheusReporterFactory" >> "$FLINK_HOME/conf/flink-conf.yaml"; \
+    echo "metrics.reporter.prometheus.class: org.apache.flink.metrics.prometheus.PrometheusReporter" >> "$FLINK_HOME/conf/flink-conf.yaml"; \
     echo "metrics.reporter.prom.port: 9249" >> "$FLINK_HOME/conf/flink-conf.yaml";
 
 # Copy Python dependencies file (requirements.txt)
