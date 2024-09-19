@@ -40,6 +40,8 @@ CREATE TABLE attributed_checkouts (
     ip_address VARCHAR,
     checkout_time TIMESTAMP,
     click_time TIMESTAMP,
+    click_time_source TIMESTAMP,
+    checkout_time_source TIMESTAMP,
     processing_time TIMESTAMP
 );
 
@@ -52,7 +54,8 @@ CREATE TABLE commerce.clicks (
     url TEXT,
     user_agent VARCHAR(255),
     ip_address VARCHAR(45),
-    datetime_occured TIMESTAMP(3) NOT NULL
+    datetime_occured TIMESTAMP(3) NOT NULL,
+    thread_id bigint
 );
 CREATE TABLE commerce.checkouts (
     checkout_id VARCHAR PRIMARY KEY,
@@ -64,7 +67,8 @@ CREATE TABLE commerce.checkouts (
     billing_address TEXT,
     user_agent VARCHAR(255),
     ip_address VARCHAR(45),
-    datetime_occured TIMESTAMP(3) NOT NULL
+    datetime_occured TIMESTAMP(3) NOT NULL,
+    thread_id bigint
 );
 
 CREATE TABLE commerce.checkouts_sink (

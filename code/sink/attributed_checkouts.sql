@@ -12,6 +12,8 @@ CREATE TABLE attributed_checkouts (
     ip_address STRING,
     checkout_time TIMESTAMP(3),
     click_time TIMESTAMP,
+    click_time_source TIMESTAMP,
+    checkout_time_source TIMESTAMP,
     processing_time TIMESTAMP,
     PRIMARY KEY (checkout_id) NOT ENFORCED
 ) WITH (

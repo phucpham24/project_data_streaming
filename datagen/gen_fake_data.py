@@ -278,8 +278,8 @@ def random_ip():
     return fake.ipv4()
 
 
-# Generate a click event
-def generate_click_event(user_id, product):
+# Generate a click event with thread_id
+def generate_click_event(user_id, product, thread_id):
     click_id = str(uuid4())
     product_id, product_name, price = product
     url = fake.uri()
@@ -298,12 +298,13 @@ def generate_click_event(user_id, product):
         "datetime_occured": datetime_occured.strftime("%Y-%m-%d %H:%M:%S.%f")[
             :-3
         ],
+        "thread_id": thread_id,  # Add thread_id here
     }
     return click_event
 
 
-# Generate a checkout event
-def generate_checkout_event(user_id, product):
+# Generate a checkout event with thread_id
+def generate_checkout_event(user_id, product, thread_id):
     product_id, product_name, price = product
     payment_method = fake.credit_card_provider()
     total_amount = price * random.uniform(1, 3)
@@ -325,6 +326,7 @@ def generate_checkout_event(user_id, product):
         "datetime_occured": datetime_occured.strftime("%Y-%m-%d %H:%M:%S.%f")[
             :-3
         ],
+        "thread_id": thread_id,  # Add thread_id here
     }
     return checkout_event
 
@@ -347,14 +349,14 @@ def push_to_kafka(event, topic, key=None):
         logging.error(f"Failed to send event to Kafka: {e}")
 
 
-# Save click events to PostgreSQL
+# Save click events to PostgreSQL including thread_id
 def save_click_to_db(conn, click_event):
     curr = conn.cursor()
     curr.execute(
         """INSERT INTO commerce.clicks
            (click_id, user_id, product_id, product,
-           price, url, user_agent, ip_address, datetime_occured)
-           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+           price, url, user_agent, ip_address, datetime_occured, thread_id)
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
         (
             click_event["click_id"],
             click_event["user_id"],
@@ -365,12 +367,13 @@ def save_click_to_db(conn, click_event):
             click_event["user_agent"],
             click_event["ip_address"],
             click_event["datetime_occured"],
+            click_event["thread_id"],  # Include thread_id
         ),
     )
     conn.commit()
 
 
-# Save checkout events to PostgreSQL
+# Save checkout events to PostgreSQL including thread_id
 def save_checkout_to_db(conn, checkout_event):
     curr = conn.cursor()
     curr.execute(
@@ -378,8 +381,8 @@ def save_checkout_to_db(conn, checkout_event):
            (checkout_id, user_id, product_id,
            payment_method, total_amount,
            shipping_address, billing_address,
-           user_agent, ip_address, datetime_occured)
-           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+           user_agent, ip_address, datetime_occured, thread_id)
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
         (
             checkout_event["checkout_id"],
             checkout_event["user_id"],
@@ -391,6 +394,7 @@ def save_checkout_to_db(conn, checkout_event):
             checkout_event["user_agent"],
             checkout_event["ip_address"],
             checkout_event["datetime_occured"],
+            checkout_event["thread_id"],  # Include thread_id
         ),
     )
     conn.commit()
@@ -400,22 +404,27 @@ def generate_click_events_for_user(
     conn, user_id, products, num_clicks_before_checkout
 ):
     clicked_products = []  # Keep track of clicked products
+    thread_id = threading.get_ident()  # Get the current thread's ID
 
     for _ in range(num_clicks_before_checkout):
         product = random.choice(products)
         clicked_products.append(product)  # Store the clicked product
-        click_event = generate_click_event(user_id, product)
+        click_event = generate_click_event(
+            user_id, product, thread_id
+        )  # Pass thread_id
         # Push click event to Kafka with user_id as the key
         push_to_kafka(click_event, 'clicks', key=click_event["user_id"])
         save_click_to_db(conn, click_event)
         time.sleep(random.uniform(0.01, 0.05))
 
     # Ensure there's at least one click event before a checkout can happen
-    if clicked_products and random.random() < 0.5:
+    if clicked_products and random.random() < 0.8:
         product = random.choice(
             clicked_products
         )  # Choose from clicked products
-        checkout_event = generate_checkout_event(user_id, product)
+        checkout_event = generate_checkout_event(
+            user_id, product, thread_id
+        )  # Pass thread_id
         # Push checkout event to Kafka with user_id as the key
         push_to_kafka(
             checkout_event, 'checkouts', key=checkout_event["user_id"]
@@ -443,7 +452,7 @@ def gen_clickstream_data(
     def worker():
         for _ in range(num_click_records // num_threads):
             user_id = random.choice(user_ids)
-            num_clicks_before_checkout = random.randint(1, 10)
+            num_clicks_before_checkout = random.randint(1, 20)
             generate_click_events_for_user(
                 conn, user_id, products, num_clicks_before_checkout
             )
@@ -460,6 +469,7 @@ def gen_clickstream_data(
 
 
 if __name__ == "__main__":
+    num_user = 100
     numpartition = 10
     replication_factor = 1
     parser = argparse.ArgumentParser()
@@ -468,7 +478,7 @@ if __name__ == "__main__":
         "--num_user_records",
         type=int,
         help="Number of user records to generate",
-        default=100,
+        default=num_user,
     )
     parser.add_argument(
         "-np",
@@ -489,7 +499,7 @@ if __name__ == "__main__":
         "--num_threads",
         type=int,
         help="Number of threads to use for data generation",
-        default=100,
+        default=num_user,
     )
     args = parser.parse_args()
 
