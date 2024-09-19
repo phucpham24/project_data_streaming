@@ -13,7 +13,10 @@ SELECT
     user_agent,
     ip_address,
     checkout_time,
-    click_time
+    click_time,
+    click_time_source,
+    checkout_time_source,
+    PROCTIME() AS processing_time
 FROM
     (
         SELECT
@@ -30,6 +33,8 @@ FROM
             co.ip_address,
             co.datetime_occured AS checkout_time,
             cl.datetime_occured AS click_time,
+            cl.processing_time AS click_time_source,
+            co.processing_time AS checkout_time_source,
             ROW_NUMBER() OVER (
                 PARTITION BY cl.user_id,
                 cl.product_id
@@ -42,7 +47,7 @@ FROM
             LEFT JOIN clicks AS cl ON co.user_id = cl.user_id
             AND co.product_id = cl.product_id
             AND co.datetime_occured BETWEEN cl.datetime_occured
-            AND cl.datetime_occured + INTERVAL '1' HOUR
+            AND cl.datetime_occured + INTERVAL '30' MINUTE
     )
 WHERE
     rn = 1;

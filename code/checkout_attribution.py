@@ -21,7 +21,7 @@ class StreamJobConfig:
     checkpoint_interval: int = 10
     checkpoint_pause: int = 5
     checkpoint_timeout: int = 5
-    parallelism: int = 2
+    parallelism: int = 10
 
 
 @dataclass(frozen=True)
@@ -66,6 +66,11 @@ class ApplicationAttributedCheckoutsTableConfig(ApplicationDatabaseConfig):
 @dataclass(frozen=True)
 class ApplicationCheckoutsSinkTableConfig(ApplicationDatabaseConfig):
     table_name: str = 'commerce.checkouts_sink'
+
+
+@dataclass(frozen=True)
+class ApplicationClicksSinkTableConfig(ApplicationDatabaseConfig):
+    table_name: str = 'commerce.clicks_sink'
 
 
 def get_execution_environment(
@@ -118,6 +123,8 @@ def get_sql_query(
         'attribute_checkouts': ApplicationAttributedCheckoutsTableConfig(),
         'checkouts_sink': ApplicationCheckoutsSinkTableConfig(),
         'checkout_sink': ApplicationCheckoutsSinkTableConfig(),
+        'clicks_sink': ApplicationClicksSinkTableConfig(),
+        'click_sink': ApplicationClicksSinkTableConfig(),
     }
 
     return template_env.get_template(f"{type}/{entity}.sql").render(
@@ -137,6 +144,7 @@ def run_checkout_attribution_job(
     # Create Sink DDL
     t_env.execute_sql(get_sql_query('attributed_checkouts', 'sink'))
     t_env.execute_sql(get_sql_query('checkouts_sink', 'sink'))
+    t_env.execute_sql(get_sql_query('clicks_sink', 'sink'))
 
     # Run processing query
     stmt_set = t_env.create_statement_set()
@@ -146,6 +154,9 @@ def run_checkout_attribution_job(
 
     # Add insert statement for checkout sink
     stmt_set.add_insert_sql(get_sql_query('checkout_sink', 'process'))
+
+    # Add insert statement for click sink
+    stmt_set.add_insert_sql(get_sql_query('click_sink', 'process'))
 
     # Execute the statement set
     checkout_attribution_job = stmt_set.execute()

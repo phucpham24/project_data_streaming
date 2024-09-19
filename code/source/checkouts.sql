@@ -1,14 +1,15 @@
 CREATE TABLE checkouts (
     checkout_id STRING,
     user_id INT,
-    product_id STRING,
+    product_id INTEGER,
     payment_method STRING,
-    total_amount DECIMAL(5, 2),
+    total_amount FLOAT,
     shipping_address STRING,
     billing_address STRING,
     user_agent STRING,
     ip_address STRING,
     datetime_occured TIMESTAMP(3),
+    thread_id bigint,
     processing_time AS PROCTIME(),
     WATERMARK FOR datetime_occured AS datetime_occured - INTERVAL '10' SECOND
 ) WITH (

@@ -1,0 +1,9 @@
+version: "2.2"
+services:
+  cleanup:
+    image: alpine
+    container_name: cleanup
+    volumes:
+      - ./flink-checkpoints:/flink-checkpoints
+    command: sh -c "rm -rf /flink-checkpoints/*"
+    entrypoint: ""

@@ -4,6 +4,10 @@ up:
 down:
 	docker compose down
 
+cleanup:
+	docker compose -f docker_cleanup.yml up cleanup
+	docker compose -f docker_cleanup.yml down
+
 run-checkout-attribution-job:
 	docker exec jobmanager ./bin/flink run --python ./code/checkout_attribution.py
 
@@ -33,8 +37,9 @@ ci: isort format type lint
 pyflink: 
 	docker exec -ti jobmanager ./bin/pyflink-shell.sh local
 
-run: down up sleep ci run-checkout-attribution-job
+run: down cleanup up sleep ci run-checkout-attribution-job
 
+stop: down cleanup
 ####################################################################################################################
 # Monitoring
 
