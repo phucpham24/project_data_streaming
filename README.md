@@ -38,6 +38,7 @@ The main objectives are:
 ```
 
 ## **Pipeline Architecture**
+![Description of image](images/dataflow.drawio.png)
 
 1. **Data Source** → Generates and streams events into Kafka.
 2. **Message Queue (Kafka)** → Acts as a messaging bus for real-time event streaming.
@@ -124,11 +125,10 @@ Use `make down` to stop the containers.
 
 ###Dashboard demo
 
-![Description of image](image/memoryused.png)
-![Description of image](image/taskmanagement.png)
-![Description of image](image/checkoutattribut.png)
-![Description of image](image/uptime.png)
-
+![Description of image](images/memoryused.png)
+![Description of image](images/taskmanagement.png)
+![Description of image](images/checkoutattribut.png)
+![Description of image](images/uptime.png)
 
 ## References
 
