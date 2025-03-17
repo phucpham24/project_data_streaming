@@ -1,22 +1,27 @@
-Beginner Data Engineering Project - Stream Version
+# Data Engineering Project - Stream Version
 
-Project
+## Project
 
-This project simulates an e-commerce use case where we aim to attribute every product checkout to the first click that led to it. The main objectives are:
+This project simulates an IoT use case where we aim to attribute every sensor data event to the first trigger that led to it.
 
-1. Enrich checkout data with user information.
-2. Identify the click that led to a checkout based on the earliest click in the previous hour.
-3. Log the attributed checkouts to a table.
+The main objectives are:
 
-Run on Codespaces
+- Set up Docker-based infrastructure: Configure Apache Flink, Kafka, PostgreSQL, Prometheus, and Grafana using Docker Compose.
+- Stream data processing: Capture and process incoming event streams in real-time.
+- Data enrichment: Enhance incoming events with additional metadata before storage.
+- Attribution logic: Implement a transformation logic (e.g., mapping events to their respective sources based on time windows).
+- Logging & storage: Persist processed data in PostgreSQL.
+- Monitoring: Configure Prometheus and Grafana for observability and metrics visualization.
 
-1. Create codespaces from the repository.
+## Run on Codespaces
+
+1. Create Codespaces from the repository.
 2. Start the project using `make run`.
 3. Access Flink UI via the `ports` tab and check the running job.
 
-Run Locally
+## Run Locally
 
-Prerequisites
+### Prerequisites
 
 Install the following:
 
@@ -26,59 +31,56 @@ Install the following:
 
 For Windows, set up WSL and an Ubuntu virtual machine.
 
-Architecture
+## Architecture
 
 The pipeline architecture involves:
 
-1. Application: Generates clicks and checkout event data.
-2. Queue: Sends data to Kafka topics.
-3. Stream Processing:
-   - Store click data in cluster state.
-   - Enrich checkout data with user information.
-   - Join checkout data with click data.
-4. Logging: Store the enriched and attributed checkout data in Postgres.
-5. Monitoring: Use Prometheus and Grafana to monitor the pipeline.
+1. **Data Source**: Generates sensor event data.
+2. **Queue**: Sends data to Kafka topics.
+3. **Stream Processing**:
+   - Store event data in cluster state.
+   - Enrich sensor event data with metadata.
+   - Join sensor data with metadata information.
+4. **Logging**: Store the enriched and attributed sensor data in Postgres.
+5. **Monitoring**: Use Prometheus and Grafana to monitor the pipeline.
 
-Code Design
+## Code Design
 
 We use Apache Table API for:
 
 1. Defining source systems.
-2. Processing data (enriching and attributing checkouts).
+2. Processing data (enriching and attributing sensor events).
 3. Defining sink systems.
 
 The main function runs the data processing job by creating sources, sinks, and processing logic.
 
-Run Streaming Job
+## Run Streaming Job
 
-Clone the repository and start the job
+Clone the repository and start the job:
 
-- Flink UI: Check the running job at `http://localhost:8081/`.
-- Grafana: Visualize metrics at `http://localhost:3000`.
+- **Flink UI**: Check the running job at `http://localhost:8081/`.
+- **Grafana**: Visualize metrics at `http://localhost:3000`.
 
-Check Output
+## Check Output
 
 Open a Postgres terminal:
 
-```
+```sh
 pgcli -h localhost -p 5432 -U postgres -d postgres
 ```
 
-Query the attributed checkouts:
+Query the attributed sensor events:
 
 ```sql
-SELECT checkout_id, click_id, checkout_time, click_time, user_name FROM commerce.attributed_checkouts order by checkout_time desc limit 5;
+SELECT event_id, trigger_id, event_time, trigger_time, sensor_name FROM iot.attributed_events ORDER BY event_time DESC LIMIT 5;
 ```
 
-Tear Down
+## Tear Down
 
 Use `make down` to stop the containers.
 
-Contributing
 
-Contributions are welcome via issues or PRs.
+## References
 
-References
-
-- Apache Flink docs
-- Flink Prometheus example project
+- [Apache Flink docs](https://nightlies.apache.org/flink/flink-docs-stable/)
+- [Flink Prometheus example project](https://nightlies.apache.org/flink/flink-docs-master/docs/ops/monitoring/)
