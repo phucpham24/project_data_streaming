@@ -119,6 +119,16 @@ SELECT event_id, trigger_id, event_time, trigger_time, sensor_name FROM iot.attr
 
 Use `make down` to stop the containers.
 
+---
+## Demo
+
+###Dashboard demo
+
+![Description of image](image/memoryused.png)
+![Description of image](image/taskmanagement.png)
+![Description of image](image/checkoutattribut.png)
+![Description of image](image/uptime.png)
+
 
 ## References
 
